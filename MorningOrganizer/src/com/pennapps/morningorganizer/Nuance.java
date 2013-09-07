@@ -1,6 +1,7 @@
 package com.pennapps.morningorganizer;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.nuance.nmdp.speechkit.SpeechKit;
 import com.nuance.nmdp.speechkit.Vocalizer;
@@ -25,10 +26,20 @@ public class Nuance {
     {
     	if (_speechKit == null)
     	{
-    		  _speechKit = SpeechKit.initialize((Context) appContext, NuanceAppInfo.SpeechKitAppId, NuanceAppInfo.SpeechKitServer, NuanceAppInfo.SpeechKitPort, NuanceAppInfo.SpeechKitSsl, NuanceAppInfo.SpeechKitApplicationKey);
+    		  _speechKit = SpeechKit.initialize(appContext, NuanceAppInfo.SpeechKitAppId, NuanceAppInfo.SpeechKitServer, NuanceAppInfo.SpeechKitPort, NuanceAppInfo.SpeechKitSsl, NuanceAppInfo.SpeechKitApplicationKey);
                _speechKit.connect();
     	}
     	
+    }
+    
+    void initializeTheVocalizer(Context appContext, Handler handler)
+    {
+    	_vocalizer = (Vocalizer) _speechKit.createVocalizerWithLanguage("en_US", (Vocalizer.Listener) appContext, handler);
+    }
+    
+    void speakTheString(String stringToSay, Context appContext)
+    {
+    	_vocalizer.speakString(stringToSay, appContext);
     }
     
     static void closeSpeechKit()
