@@ -10,8 +10,8 @@ public class Nuance {
 
 	public static final String TTS_KEY = "com.nuance.nmdp.sample.tts";	 //to change later?
     
-    private Vocalizer _vocalizer;
-    private Object _lastTtsContext = null;
+    private static Vocalizer _vocalizer;
+    private static Object _lastTtsContext = null;
     
 	
 	private static SpeechKit _speechKit;
@@ -22,22 +22,23 @@ public class Nuance {
         return _speechKit;
     }
     
-    static void initializeSpeechKit(Context appContext)
+    static void initializeSpeechKit(Context appContext, Handler handler)
     {
     	if (_speechKit == null)
     	{
     		  _speechKit = SpeechKit.initialize(appContext, NuanceAppInfo.SpeechKitAppId, NuanceAppInfo.SpeechKitServer, NuanceAppInfo.SpeechKitPort, NuanceAppInfo.SpeechKitSsl, NuanceAppInfo.SpeechKitApplicationKey);
                _speechKit.connect();
+               initializeTheVocalizer(appContext, handler);
     	}
     	
     }
     
-    void initializeTheVocalizer(Context appContext, Handler handler)
+    static void initializeTheVocalizer(Context appContext, Handler handler)
     {
     	_vocalizer = (Vocalizer) _speechKit.createVocalizerWithLanguage("en_US", (Vocalizer.Listener) appContext, handler);
     }
     
-    void speakTheString(String stringToSay, Context appContext)
+    static void speakTheString(String stringToSay, Context appContext)
     {
     	_vocalizer.speakString(stringToSay, appContext);
     }
